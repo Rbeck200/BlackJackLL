@@ -5,46 +5,40 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Card //: MonoBehaviour
-{
-    private int point;
-    private GameObject card;
+{   
     private Sprite cardFace;
-    
-    public int Point { get { return this.point; } }
-    public GameObject Face { get { return this.card; } }
-    public Sprite cardImage { get {return this.cardFace; } }
+    private Sprite cardBack;
+    private GameObject card;
+
+    public Sprite frontImage { get {return this.cardFace; } }
+    public Sprite backImage { get { return this.cardBack; } }
+    public GameObject Face { get { return this.card; } set {card = value; } }
     public string Name;
     public bool isFaceUp = true;
 
-    public Card(Sprite CardFace)
+    public Card(Sprite CardFace, Sprite CardBack)
     {
         cardFace = CardFace;
+        cardBack = CardBack;
         Name = CardFace.name;
-        int point;
-        switch (Name.Substring(Name.Length - 1))
-        {
-            // ace
-            case "e":
-                point = 11;
-                break;
-            case "k":// jacK
-            case "g": // kinG
-            case "n": // queeN
-            case "0": // 10
-                point = 10;
-                break;
-            default:
-                // other remaining possible cards, 2 - 9
-                point = Convert.ToInt16(Name.Substring(Name.Length - 1));
-                break;
-        }
-        this.point = point;
     }
 
     public void makeCard(GameObject prefab)
     {
         card = prefab;
-        card.GetComponent<Image>().sprite = cardFace;
+        if (isFaceUp)
+        {
+            card.GetComponent<Image>().sprite = frontImage;
+        }
+        else
+        {
+            card.GetComponent<Image>().sprite = backImage;
+        }
     }
 
+    public void setBack(GameObject prefab, Sprite CardFace)
+    {
+        card = prefab;
+        card.GetComponent<Image>().sprite = CardFace;
+    }
 }

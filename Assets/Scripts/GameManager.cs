@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private Sprite[] CardFace;
 	[SerializeField]
+	private Sprite CardBack;
+	[SerializeField]
 	private GameObject[] playerCardPosition, dealerCardPosition;
 	[SerializeField]
-	private GameObject cardBack, cardBlank;
+	private GameObject cardBlank;
 	[SerializeField]
 	private Button mainBtn, standBtn, resetBalanceBtn, resetGameBtn, addBtn, subBtn, playBtn;
 	[SerializeField]
@@ -20,8 +22,8 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private Image resetImgBtn;
 
-	private List<Card> playerCards;
-	private List<Card> dealerCards;
+	private LinkedList<PokerCard> playerCards;
+	private LinkedList<PokerCard> dealerCards;
 	private bool playing;
 	private int playerPoints;
 	private int dealerPoints, displayDealerPoints;
@@ -29,7 +31,9 @@ public class GameManager : MonoBehaviour {
 	private int currentBet;
 	private int playerCardPointer, dealerCardPointer;
 	private int numDecks;
-	private Deck playingDeck;
+	private string cardImage;
+	private string BackOfCard;
+	private PokerDeck playingDeck;
 
 	private void Setup()
 	{
@@ -125,7 +129,7 @@ public class GameManager : MonoBehaviour {
 
 			// assign the playing deck with 2 deck of cards
 			//playingDeck = new Deck(cardFaces, numDecks);
-			playingDeck = new Deck(CardFace, numDecks);
+			playingDeck = new PokerDeck(CardFace, CardBack, numDecks);
 
 
 			// draw 2 cards for player and dealer
@@ -169,28 +173,27 @@ public class GameManager : MonoBehaviour {
 
 	public void dealerDraw() {
 		
-		Card card = playingDeck.DrawCard();
-		card.makeCard(cardBlank);
+		PokerCard card = playingDeck.DrawPokerCardFirst();
+		
 		GameObject cardFace;
 		
-		dealerCards.Add(card);
+		dealerCards.AddFirst(card);
 	
 		if (dealerCardPointer <= 0) {
-			
-			cardFace = cardBack;
+			card.isFaceUp = false;
+			card.makeCard(cardBlank);
 		} else {
-			
-			cardFace = card.Face;
+			card.makeCard(cardBlank);
 		}
-		
+		cardFace = card.Face;
 		Instantiate(cardFace, dealerCardPosition[dealerCardPointer++].transform);
 		updateDealerPoints(false);
 	}
 
 	public void playerDraw() {
-		Card card = playingDeck.DrawCard();
+		PokerCard card = playingDeck.DrawPokerCardFirst();
 		card.makeCard(cardBlank);
-		playerCards.Add(card);
+		playerCards.AddFirst(card);
 		Instantiate(card.Face, playerCardPosition[playerCardPointer++].transform);
 		updatePlayerPoints();
 		if (playerPoints > 21)
@@ -230,12 +233,12 @@ public class GameManager : MonoBehaviour {
 	private void revealDealersCards() {
 		// reveal the dealer's down-facing card
 		Destroy(dealerCardPosition[0].transform.GetChild(0).gameObject);
-		Instantiate(dealerCards[0].Face, dealerCardPosition[0].transform);
+		Instantiate(dealerCards.Last.Value.Face, dealerCardPosition[0].transform);	//use last because the first card put in is at the end
 	}
 
 	private void updatePlayerPoints() {
 		playerPoints = 0;
-		foreach(Card card in playerCards) {
+		foreach(PokerCard card in playerCards) {
 			playerPoints += card.Point;
 		}
 
@@ -243,7 +246,7 @@ public class GameManager : MonoBehaviour {
 		if (playerPoints > 21)
 		{
 			playerPoints = 0;
-			foreach(Card card in playerCards) {
+			foreach(PokerCard card in playerCards) {
 				if (card.Point == 11)
 					playerPoints += 1;
 				else
@@ -256,7 +259,7 @@ public class GameManager : MonoBehaviour {
 
 	private void updateDealerPoints(bool hideFirstCard) {
 		dealerPoints = 0;
-		foreach(Card card in dealerCards) {
+		foreach(PokerCard card in dealerCards) {
 			dealerPoints += card.Point;
 		}
 
@@ -264,7 +267,7 @@ public class GameManager : MonoBehaviour {
 		if (dealerPoints > 21)
 		{
 			dealerPoints = 0;
-			foreach(Card card in dealerCards) {
+			foreach(PokerCard card in dealerCards) {
 				if (card.Point == 11)
 					dealerPoints += 1;
 				else
@@ -273,7 +276,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (hideFirstCard)
-			displayDealerPoints = dealerCards[1].Point;
+			displayDealerPoints = dealerCards.Last.Previous.Value.Point;
 		else
 			displayDealerPoints = dealerPoints;
 		dealerPointsTxt.text = displayDealerPoints.ToString();
@@ -299,6 +302,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void playerWin(bool winByBust) {
+		updateDealerPoints(false);
+		revealDealersCards();
 		if (winByBust)
 			winTxt.text = "Dealer Busted\nYou Win!";
 		else
@@ -308,6 +313,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void dealerWin(bool winByBust) {
+		updateDealerPoints(false);
+		revealDealersCards();
 		if (winByBust)
 			winTxt.text = "You Busted\nDealer Wins!";
 		else
@@ -332,9 +339,9 @@ public class GameManager : MonoBehaviour {
 		currentBet = 0;
 
 		// reset cards
-		playingDeck = new Deck(CardFace, numDecks);
-		playerCards = new List<Card>();
-		dealerCards = new List<Card>();
+		playingDeck = new PokerDeck(CardFace, CardBack, numDecks);
+		playerCards = new LinkedList<PokerCard>();
+		dealerCards = new LinkedList<PokerCard>();
 
 		// reset UI
 

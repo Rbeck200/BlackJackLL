@@ -3,39 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Deck //: MonoBehaviour
 {
-    private List<PokerCard> deck;
+    private LinkedList<Card> deck;
     private void ShuffleCards()
     {
-        for (int i = 0; i < (deck.Count * 1000); i++)
+        bool random = true;
+        int randNum = UnityEngine.Random.Range(5, 11);
+        int counter = 0;
+        for (int i = 0; i < 100; i++)
         {
-            int index1 = UnityEngine.Random.Range(0, deck.Count - 1);
-            int index2 = UnityEngine.Random.Range(0, deck.Count - 1);
-            if (index1 == index2)
+            LinkedList<Card> temp = new LinkedList<Card>();
+            while (deck.First != null || deck.Last != null)
             {
-                index2 = UnityEngine.Random.Range(0, deck.Count - 1);
+                temp.AddLast(deck.First);
+                deck.RemoveFirst();
+                counter++;
+                if (deck.Last != null)
+                {
+                    temp.AddLast(deck.Last);
+                    deck.RemoveLast();
+                    counter++;
+                    if (deck.First != null || deck.Last != null && counter % randNum == 0)
+                    {
+                        if (random)
+                        {
+                            random = false;
+                            temp.AddLast(deck.Last);
+                            deck.RemoveLast();
+                            counter++;
+                        }
+                        else
+                        {
+                            random = true;
+                            temp.AddLast(deck.First);
+                            deck.RemoveFirst();
+                            counter++;
+                        }
+                    }
+                }
             }
-            PokerCard temp = deck[index1];
-            deck[index1] = deck[index2];
-            deck[index2] = temp;
+            deck.Clear();
+            deck = temp;
         }
     }
 
-    public Deck(Sprite[] cardFaces ,int numDecks)
+    public Deck(Sprite[] cardFaces , Sprite cardBack,int numDecks)
     {
-        deck = new List<PokerCard>();
+        deck = new LinkedList<Card>();
         while (numDecks-- > 0)
         {
             foreach (Sprite card in cardFaces)
             {
-                deck.Add(new PokerCard(card));
+                deck.AddLast(new Card(card, cardBack));
             }
         }
-        ShuffleCards();
+        //ShuffleCards();
     }
 
     public Card DrawCard() {
-        Card chosen = deck[deck.Count - 1];
-        deck.RemoveAt(deck.Count - 1);
+       Card chosen = deck.First.Value;
+        deck.RemoveFirst();
         return chosen;
     }
+
 }
