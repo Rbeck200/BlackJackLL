@@ -54,17 +54,6 @@ public class PokerCard : Card
         }
         this.point = point;
     }
-    public void makeCard(GameObject prefab)
-    {
-        Face = prefab;
-        if (isFaceUp)
-        {
-            Face.GetComponent<Image>().sprite = frontImage;
-        }
-        else
-        {
-            Face.GetComponent<Image>().sprite = backImage;
-        }
-    }
+
 }
 

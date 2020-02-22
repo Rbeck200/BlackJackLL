@@ -172,7 +172,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void dealerDraw() {
-		
+		Debug.Log("Starts Dealer Draw");
 		PokerCard card = playingDeck.DrawPokerCardFirst();
 		
 		GameObject cardFace;
@@ -180,9 +180,11 @@ public class GameManager : MonoBehaviour {
 		dealerCards.AddFirst(card);
 	
 		if (dealerCardPointer <= 0) {
+			Debug.Log("Dealer Draws First Card");
 			card.isFaceUp = false;
 			card.makeCard(cardBlank);
 		} else {
+			Debug.Log("Dealer Draws Not First Card");
 			card.makeCard(cardBlank);
 		}
 		cardFace = card.Face;
@@ -201,31 +203,33 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void playerEndTurn() {
+		Debug.Log("Player End Turn");
 		revealDealersCards();
 		// dealer start drawing
 		while (dealerPoints < 17 && dealerPoints < playerPoints) {
+			Debug.Log("Dealer Draw Card");
 			dealerDraw();
 			
 		}
 		updateDealerPoints(false);
 		if (dealerPoints > 21)
 		{
-			
+			Debug.Log("Player Wins Dealer Busted");
 			dealerBusted();
 		}
 		else if (dealerPoints > playerPoints)
 		{
-			
+			Debug.Log("Dealer Wins Player Loses");
 			dealerWin(false);
 		}
 		else if (dealerPoints == playerPoints)
 		{
-			
+			Debug.Log("Draw");
 			gameDraw();
 		}
 		else
 		{
-		
+			Debug.Log("Player wins Dealer Loses");
 			playerWin(false);
 		}
 	}
@@ -258,6 +262,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void updateDealerPoints(bool hideFirstCard) {
+		Debug.Log("Start Dealer Points Update");
 		dealerPoints = 0;
 		foreach(PokerCard card in dealerCards) {
 			dealerPoints += card.Point;
@@ -302,8 +307,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void playerWin(bool winByBust) {
-		updateDealerPoints(false);
-		revealDealersCards();
 		if (winByBust)
 			winTxt.text = "Dealer Busted\nYou Win!";
 		else
@@ -313,8 +316,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void dealerWin(bool winByBust) {
-		updateDealerPoints(false);
-		revealDealersCards();
 		if (winByBust)
 			winTxt.text = "You Busted\nDealer Wins!";
 		else

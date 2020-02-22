@@ -8,54 +8,51 @@ public class PokerDeck : Deck
 
     private void ShufflePokerCards()
     {
-        bool random = true;
-        int randNum = UnityEngine.Random.Range(5, 11);
-        int counter = 0;
-        
+        bool random = true; //constant
+        int randNum = UnityEngine.Random.Range(5, 11); //constant
+        int counter = 0; //constant
+
         for (int i = 0; i < 100; i++)
         {
             LinkedList<PokerCard> temp = new LinkedList<PokerCard>();
             while (pokerDeck.First != null || pokerDeck.Last != null)
             {
                 LinkedListNode<PokerCard> tempNode = pokerDeck.First;
-                pokerDeck.RemoveFirst();
-                temp.AddLast(tempNode);
-                counter++;
+                pokerDeck.RemoveFirst(); //constant
+                temp.AddLast(tempNode); //constant
+                counter++; //constant
                 if (pokerDeck.Last != null)
                 {
                     tempNode = pokerDeck.Last;
-                    pokerDeck.RemoveLast();
-                    temp.AddLast(tempNode);
-                    counter++;
+                    pokerDeck.RemoveLast(); //constant
+                    temp.AddLast(tempNode); //constant
+                    counter++; //constant
                     if ((pokerDeck.First != null || pokerDeck.Last != null) && counter % randNum == 0)
                     {
                         if (random)
                         {
-                            random = false;
+                            random = false; //constant
                             tempNode = pokerDeck.Last;
-                            pokerDeck.RemoveLast();
-                            temp.AddLast(tempNode);
-                            
-                            counter++; ;
+                            pokerDeck.RemoveLast(); //constant
+                            temp.AddLast(tempNode); //constant
+                            counter++;  //constant
                         }
                         else
                         {
-                            random = true;
+                            random = true; //constant
                             tempNode = pokerDeck.First;
-                            pokerDeck.RemoveFirst();
-                            temp.AddLast(tempNode);
-                            
-                            counter++;
+                            pokerDeck.RemoveFirst(); //constant
+                            temp.AddLast(tempNode); //constant
+                            counter++; //constant
                         }
-                        randNum = UnityEngine.Random.Range(5, 11);
+                        randNum = UnityEngine.Random.Range(5, 11); //constant
                     }
                     else
                     {
-                        randNum = UnityEngine.Random.Range(5, 11);
+                        randNum = UnityEngine.Random.Range(5, 11); //constant
                     }
                 }
             }
-            pokerDeck.Clear();
             pokerDeck = temp;
         }
     }
