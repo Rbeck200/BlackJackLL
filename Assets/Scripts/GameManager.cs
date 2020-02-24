@@ -237,6 +237,8 @@ public class GameManager : MonoBehaviour {
 	private void revealDealersCards() {
 		// reveal the dealer's down-facing card
 		Destroy(dealerCardPosition[0].transform.GetChild(0).gameObject);
+		dealerCards.Last.Value.isFaceUp = true;
+		dealerCards.Last.Value.makeCard(cardBlank);
 		Instantiate(dealerCards.Last.Value.Face, dealerCardPosition[0].transform);	//use last because the first card put in is at the end
 	}
 
