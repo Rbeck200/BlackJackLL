@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour {
 
 	public void dealerDraw() {
 		Debug.Log("Starts Dealer Draw");
-		PokerCard card = playingDeck.DrawPokerCardFirst();
+		PokerCard card = playingDeck.DrawPokerCardTop();
 		
 		GameObject cardFace;
 		
@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void playerDraw() {
-		PokerCard card = playingDeck.DrawPokerCardFirst();
+		PokerCard card = playingDeck.DrawPokerCardTop();
 		card.makeCard(cardBlank);
 		playerCards.AddFirst(card);
 		Instantiate(card.Face, playerCardPosition[playerCardPointer++].transform);
@@ -386,5 +386,11 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	private PokerCard randomPokerCard()
+	{
+		Sprite randSprite = CardFace[UnityEngine.Random.Range(0,52)];
+		PokerCard card = new PokerCard(randSprite, CardBack);
+		return card;
+	}
 	
 }

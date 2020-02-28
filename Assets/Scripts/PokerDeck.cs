@@ -6,6 +6,39 @@ public class PokerDeck : Deck
 {
     private LinkedList<PokerCard> pokerDeck;
 
+    public void Merge(PokerDeck deckOne, PokerDeck deckTwo)
+    {
+        LinkedList<PokerCard> temp = new LinkedList<PokerCard>();
+        while(deckOne.pokerDeck.Last != null || deckTwo.pokerDeck.Last != null)
+        {
+            LinkedListNode<PokerCard> tempNode = deckOne.pokerDeck.First;
+            deckOne.pokerDeck.RemoveFirst();
+            temp.AddLast(tempNode);
+
+            tempNode = deckTwo.pokerDeck.First;
+            deckTwo.pokerDeck.RemoveFirst();
+            temp.AddLast(tempNode);
+        }
+        if (deckOne.pokerDeck.Last != null)
+        {
+            while (deckOne.pokerDeck.Last != null)
+            {
+                LinkedListNode<PokerCard> tempNode = deckTwo.pokerDeck.First;
+                deckTwo.pokerDeck.RemoveFirst();
+                temp.AddLast(tempNode);
+            }
+        }
+        else
+        {
+            while (deckTwo.pokerDeck.Last != null)
+            {
+                LinkedListNode<PokerCard> tempNode = deckOne.pokerDeck.First;
+                deckOne.pokerDeck.RemoveFirst();
+                temp.AddLast(tempNode);
+            }
+        }
+    }
+
     private void ShufflePokerCards()
     {
         bool random = true; //constant
@@ -69,19 +102,44 @@ public class PokerDeck : Deck
         ShufflePokerCards();
     }
 
-    public PokerCard DrawPokerCardFirst()
+    public PokerCard DrawPokerCardTop()
     {
         PokerCard chosen = pokerDeck.First.Value;
         pokerDeck.RemoveFirst();
         return chosen;
     }
 
-    public PokerCard DrawPokerCardLast()
+    public PokerCard DrawPokerCardBottom()
     {
         PokerCard chosen = pokerDeck.Last.Value;
         pokerDeck.RemoveLast();
         return chosen;
     }
+
+    public void AddTop(PokerCard card)
+    {
+        
+    }
+
+    public void AddBottom(PokerCard card)
+    {
+        pokerDeck.AddLast(card);
+    }
+
+
+    //public PokerCard AddTop(Sprite cardFace, Sprite cardBack)
+    //{
+    //    PokerCard chosen = new PokerCard(cardFace, cardBack);
+    //    pokerDeck.AddFirst(chosen);
+    //    return chosen;
+    //}
+
+    //public PokerCard AddBottom(Sprite cardFace, Sprite cardBack)
+    //{
+    //    PokerCard chosen = new PokerCard(cardFace, cardBack);
+    //    pokerDeck.AddLast(chosen);
+    //    return chosen;
+    //}
 
 
 }
