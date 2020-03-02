@@ -59,6 +59,11 @@ public class Deck //: MonoBehaviour
         //ShuffleCards();
     }
 
+    public Deck()
+    {
+
+    }
+
     public Card DrawCard() {
        Card chosen = deck.First.Value;
         deck.RemoveFirst();

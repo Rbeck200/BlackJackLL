@@ -8,16 +8,16 @@ public class PokerDeck : Deck
 
     public void Merge(PokerDeck deckOne, PokerDeck deckTwo)
     {
-        LinkedList<PokerCard> temp = new LinkedList<PokerCard>();
+       PokerDeck temp = new PokerDeck();
         while(deckOne.pokerDeck.Last != null || deckTwo.pokerDeck.Last != null)
         {
             LinkedListNode<PokerCard> tempNode = deckOne.pokerDeck.First;
             deckOne.pokerDeck.RemoveFirst();
-            temp.AddLast(tempNode);
+            temp.pokerDeck.AddLast(tempNode);
 
             tempNode = deckTwo.pokerDeck.First;
             deckTwo.pokerDeck.RemoveFirst();
-            temp.AddLast(tempNode);
+            temp.pokerDeck.AddLast(tempNode);
         }
         if (deckOne.pokerDeck.Last != null)
         {
@@ -25,7 +25,7 @@ public class PokerDeck : Deck
             {
                 LinkedListNode<PokerCard> tempNode = deckTwo.pokerDeck.First;
                 deckTwo.pokerDeck.RemoveFirst();
-                temp.AddLast(tempNode);
+                temp.pokerDeck.AddLast(tempNode);
             }
         }
         else
@@ -34,12 +34,13 @@ public class PokerDeck : Deck
             {
                 LinkedListNode<PokerCard> tempNode = deckOne.pokerDeck.First;
                 deckOne.pokerDeck.RemoveFirst();
-                temp.AddLast(tempNode);
+                temp.pokerDeck.AddLast(tempNode);
             }
         }
+        deckOne = temp;
     }
 
-    private void ShufflePokerCards()
+    public void ShufflePokerCards()
     {
         bool random = true; //constant
         int randNum = UnityEngine.Random.Range(5, 11); //constant
@@ -102,6 +103,11 @@ public class PokerDeck : Deck
         ShufflePokerCards();
     }
 
+    public PokerDeck()
+    {
+
+    }
+
     public PokerCard DrawPokerCardTop()
     {
         PokerCard chosen = pokerDeck.First.Value;
@@ -118,7 +124,7 @@ public class PokerDeck : Deck
 
     public void AddTop(PokerCard card)
     {
-        
+        pokerDeck.AddFirst(card);
     }
 
     public void AddBottom(PokerCard card)

@@ -385,12 +385,4 @@ public class GameManager : MonoBehaviour {
 				}
 		}
 	}
-
-	private PokerCard randomPokerCard()
-	{
-		Sprite randSprite = CardFace[UnityEngine.Random.Range(0,52)];
-		PokerCard card = new PokerCard(randSprite, CardBack);
-		return card;
-	}
-	
 }
